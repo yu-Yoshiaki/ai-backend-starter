@@ -8,6 +8,7 @@ import {
   loggingMiddleware,
   specialMiddleware,
 } from "./middleware";
+import { CloudflareDeployer } from "@mastra/deployer-cloudflare";
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -17,14 +18,14 @@ export const mastra = new Mastra({
     level: "info",
   }),
   serverMiddleware: [
-    // {
-    //   path: "/api/weather",
-    //   handler: corsMiddleware,
-    // },
-    // {
-    //   path: "/api/*",
-    //   handler: authMiddleware,
-    // },
+    {
+      path: "/api/*",
+      handler: corsMiddleware,
+    },
+    {
+      path: "/api/*",
+      handler: authMiddleware,
+    },
     {
       path: "/api/*",
       handler: loggingMiddleware,
@@ -34,4 +35,17 @@ export const mastra = new Mastra({
       handler: specialMiddleware,
     },
   ],
+  deployer: new CloudflareDeployer({
+    scope: process.env.CLOUDFLARE_ACCOUNT_ID ?? "",
+    projectName: "ai-backend-starter",
+    workerNamespace: "ai-backend",
+    env: {
+      NODE_ENV: process.env.NODE_ENV || "production",
+      API_VERSION: "v1",
+    },
+    auth: {
+      apiToken: process.env.CLOUDFLARE_API_TOKEN ?? "",
+      apiEmail: process.env.CLOUDFLARE_EMAIL,
+    },
+  }),
 });
