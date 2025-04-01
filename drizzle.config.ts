@@ -4,7 +4,7 @@ dotenv.config();
 
 export default {
   schema: "./src/db/schema.ts",
-  out: "./migrations",
+  out: "./src/db/migrations",
   dialect: "turso",
   dbCredentials: {
     url: process.env.DATABASE_URL || "",
