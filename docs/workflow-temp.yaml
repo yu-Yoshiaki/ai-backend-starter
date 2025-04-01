@@ -6,10 +6,12 @@ setup:
 # ディレクトリ構成
 directories:
   - src/
-  - mastra/
-  - workflows/
-    - index.ts
-  - agents/
+    - mastra/
+      - memory/
+        - index.ts
+      - workflows/
+        - index.ts
+      - agents/
     - index.ts
 
 # ワークフロー定義
