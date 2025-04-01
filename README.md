@@ -8,6 +8,95 @@
 pnpm install
 ```
 
+## データベースのセットアップ
+
+このプロジェクトは[Turso](https://turso.tech)をデータベースとして使用しています。
+
+### 1. Turso CLIのインストール
+
+macOSの場合：
+
+```bash
+brew install tursodatabase/tap/turso
+```
+
+その他のプラットフォーム：
+
+- Linux: `curl -sSfL https://get.tur.so/install.sh | bash`
+- Windows (WSL): macOSと同じ手順
+
+### 2. Tursoへの認証
+
+新規ユーザーの場合：
+
+```bash
+turso auth signup
+```
+
+既存ユーザーの場合：
+
+```bash
+turso auth login
+```
+
+### 3. データベースの作成
+
+```bash
+# データベースの作成（自動的に最寄りのリージョンが選択されます）
+turso db create my-app-db
+
+# データベースの情報を確認
+turso db show my-app-db
+```
+
+### 4. データベース認証情報の取得
+
+```bash
+# データベースURLの取得
+turso db show --url my-app-db
+
+# 認証トークンの作成
+turso db tokens create my-app-db
+```
+
+### 5. 環境変数の設定
+
+`.env`ファイルに以下の環境変数を設定：
+
+```bash
+DATABASE_URL="libsql://your-database-name.turso.io"
+DATABASE_AUTH_TOKEN="your-auth-token"
+```
+
+### 6. マイグレーションの実行
+
+```bash
+# マイグレーションファイルの生成
+pnpm db:generate
+
+# データベースの更新
+pnpm db:migrate
+```
+
+### 7. データベースの確認
+
+```bash
+# データベースシェルに接続
+turso db shell my-app-db
+
+# SQLコマンドの実行例
+.tables  # テーブル一覧の表示
+SELECT * FROM users;  # usersテーブルの内容確認
+```
+
+### 利用可能なデータベースコマンド
+
+```bash
+pnpm db:generate  # マイグレーションファイルの生成
+pnpm db:migrate   # マイグレーションの実行
+pnpm db:studio    # データベース管理UI（開発用）の起動
+```
+
 ## 開発サーバーの起動
 
 ```bash
