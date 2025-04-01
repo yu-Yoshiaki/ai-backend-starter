@@ -6,7 +6,7 @@ import {
   corsMiddleware,
   authMiddleware,
   loggingMiddleware,
-  specialMiddleware,
+  // specialMiddleware,
 } from "./middleware";
 import { CloudflareDeployer } from "@mastra/deployer-cloudflare";
 
@@ -24,21 +24,20 @@ export const mastra = new Mastra({
     },
     {
       path: "/api/*",
-      handler: authMiddleware,
-    },
-    {
-      path: "/api/*",
       handler: loggingMiddleware,
     },
     {
       path: "/api/*",
-      handler: specialMiddleware,
+      handler: authMiddleware,
     },
+    // {
+    //   path: "/api/*",
+    //   handler: specialMiddleware,
+    // },
   ],
   deployer: new CloudflareDeployer({
     scope: process.env.CLOUDFLARE_ACCOUNT_ID ?? "",
     projectName: "ai-backend-starter",
-    workerNamespace: "ai-backend",
     env: {
       NODE_ENV: process.env.NODE_ENV || "production",
       API_VERSION: "v1",
