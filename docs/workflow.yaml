@@ -1,0 +1,240 @@
+---
+# 事前準備
+setup:
+  - access mastraDocs
+
+# ディレクトリ構成
+directories:
+  - src/
+  - mastra/
+  - workflows/
+    - index.ts
+  - agents/
+    - index.ts
+
+# ワークフロー定義
+name: Deep Research Agent ワークフロー
+description: ユーザークエリから深い調査を行うワークフロー
+
+steps:
+  - name: userQuery
+    input:
+      - name: query
+        type: string
+    output:
+      - name: analyzedQuery
+        type: string
+    execute: |
+      # ユーザーからの質問受け取り処理
+      return { analyzedQuery: context.query }
+
+  - name: activateAgent
+    input:
+      - name: analyzedQuery
+        type: string
+    output:
+      - name: activatedAgent
+        type: object
+    execute: |
+      # Deep Research Agentの起動処理
+      return { activatedAgent: { id: "deep-research", status: "active" } }
+
+  - name: planning
+    input:
+      - name: analyzedQuery
+        type: string
+      - name: activatedAgent
+        type: object
+    output:
+      - name: researchPlan
+        type: object
+    execute: |
+      # 調査計画の立案
+      return { researchPlan: { steps: [], priorities: [] } }
+
+  - name: initialQueryCreation
+    input:
+      - name: researchPlan
+        type: object
+    output:
+      - name: searchQueries
+        type: array
+    execute: |
+      # 初期検索クエリの生成
+      return { searchQueries: [] }
+
+  - name: webSearch
+    input:
+      - name: searchQueries
+        type: array
+    output:
+      - name: searchResults
+        type: array
+    execute: |
+      # Web検索の実行
+      return { searchResults: [] }
+
+  - name: searchResultAnalysis
+    input:
+      - name: searchResults
+        type: array
+    output:
+      - name: analyzedResults
+        type: object
+    execute: |
+      # 検索結果の分析
+      return { analyzedResults: {} }
+
+  - name: infoOrganization
+    input:
+      - name: analyzedResults
+        type: object
+    output:
+      - name: organizedInfo
+        type: object
+    execute: |
+      # 情報整理
+      return { organizedInfo: {} }
+
+  - name: gapResolutionTool
+    input:
+      - name: organizedInfo
+        type: object
+    output:
+      - name: gapAnalysis
+        type: object
+    execute: |
+      # 情報ギャップの分析と解決ツール実行
+      return { gapAnalysis: { hasGaps: false } }
+
+  - name: infoSufficiencyCheck
+    input:
+      - name: gapAnalysis
+        type: object
+    output:
+      - name: isSufficient
+        type: boolean
+    execute: |
+      # 情報の十分性チェック
+      return { isSufficient: !context.gapAnalysis.hasGaps }
+
+  - name: additionalQueryTool
+    input:
+      - name: gapAnalysis
+        type: object
+    output:
+      - name: additionalQueries
+        type: array
+    execute: |
+      # 追加クエリの生成
+      return { additionalQueries: [] }
+
+  - name: additionalWebSearch
+    input:
+      - name: additionalQueries
+        type: array
+    output:
+      - name: additionalResults
+        type: array
+    execute: |
+      # 追加Web検索の実行
+      return { additionalResults: [] }
+
+  - name: resultAnalysisOrganization
+    input:
+      - name: additionalResults
+        type: array
+      - name: organizedInfo
+        type: object
+    output:
+      - name: updatedInfo
+        type: object
+      - name: iterationCount
+        type: number
+    execute: |
+      # 結果の分析と整理、繰り返し回数の追跡
+      return {
+        updatedInfo: {},
+        iterationCount: 1
+      }
+
+  - name: maxIterationCheck
+    input:
+      - name: iterationCount
+        type: number
+    output:
+      - name: canContinue
+        type: boolean
+    execute: |
+      # 最大繰り返し回数のチェック
+      const MAX_ITERATIONS = 3
+      return { canContinue: context.iterationCount < MAX_ITERATIONS }
+
+  - name: documentIntegration
+    input:
+      - name: organizedInfo
+        type: object
+    output:
+      - name: integratedDocument
+        type: object
+    execute: |
+      # 文書の統合
+      return { integratedDocument: {} }
+
+  - name: finalDocumentCreation
+    input:
+      - name: integratedDocument
+        type: object
+    output:
+      - name: finalDocument
+        type: object
+    execute: |
+      # 最終文書の生成
+      return { finalDocument: {} }
+
+  - name: userResponse
+    input:
+      - name: finalDocument
+        type: object
+    output:
+      - name: response
+        type: string
+    execute: |
+      # ユーザーへの応答作成
+      return { response: "" }
+
+flow:
+  - step: userQuery
+    next: activateAgent
+  - step: activateAgent
+    next: planning
+  - step: planning
+    next: initialQueryCreation
+  - step: initialQueryCreation
+    next: webSearch
+  - step: webSearch
+    next: searchResultAnalysis
+  - step: searchResultAnalysis
+    next: infoOrganization
+  - step: infoOrganization
+    next: gapResolutionTool
+  - step: gapResolutionTool
+    next: infoSufficiencyCheck
+  - step: infoSufficiencyCheck
+    conditions:
+      - condition: "not context.isSufficient"
+        steps:
+          - step: additionalQueryTool
+          - step: additionalWebSearch
+          - step: resultAnalysisOrganization
+          - step: maxIterationCheck
+            conditions:
+              - condition: context.canContinue
+                next: gapResolutionTool
+              - condition: "not context.canContinue"
+                next: documentIntegration
+      - condition: context.isSufficient
+        steps:
+          - step: documentIntegration
+          - step: finalDocumentCreation
+          - step: userResponse

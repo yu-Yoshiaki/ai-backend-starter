@@ -1,0 +1,26 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+実装をする場合は、git でブランチを切ってから作業すること。
+
+毎回、以下を参照して、全体像を掴んだ上でアクションして。
+
+---
+
+プロジェクト概要: 
+[description.yaml](mdc:docs/description.yaml)
+
+---
+
+パッケージ:
+[package.json](mdc:package.json)
+
+---
+
+データベーススキーマ:
+[schema.ts](mdc:src/db/schema.ts)
+
+---

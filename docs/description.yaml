@@ -1,0 +1,30 @@
+project:
+  name: AI Backend Starter
+  description: AIエージェントを活用したバックエンドアプリケーションを構築するためのボイラープレート
+  tech_stack:
+    runtime:
+      name: Node.js
+      description: サーバーサイドランタイム環境
+    package_manager:
+      name: pnpm
+      description: 高速で効率的なパッケージマネージャー
+    framework:
+      name: Mastra
+      description: AIエージェント開発フレームワーク
+  
+  features:
+    development:
+      - シンプルな構成で、AIエージェントの開発に必要な基本機能を提供
+      - Mastraフレームワークを活用した柔軟なAIエージェントの実装
+    infrastructure:
+      - pnpmによる効率的な依存関係管理
+      - モダンなNode.js開発環境
+
+  target_audience:
+    developers:
+      - role: バックエンドエンジニア
+        focus: AIエージェントを活用したバックエンドサービスの開発
+      - role: AIアプリケーション開発者
+        focus: Mastraフレームワークを使用したAIアプリケーション構築
+      - role: Node.jsエンジニア
+        focus: 効率的なNode.jsアプリケーション開発
