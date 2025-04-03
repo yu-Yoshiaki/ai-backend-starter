@@ -1,0 +1,248 @@
+src:
+  structure.yaml:
+    content: |-
+      l-agent プロジェクト構造
+      - 主要機能:
+        * Mastra.aiを利用したエージェント機能
+        * TypeScriptベース
+        * データベース統合
+      - 技術スタック:
+        * TypeScript
+        * pnpm (パッケージマネージャー)
+        * Drizzle ORM (SQLクエリビルダー)
+        * Mastra.ai SDK
+      - デプロイメント:
+        * ローカル開発環境
+        * 本番環境
+    ref: ["Mastra.ai エージェント開発"]
+    dependency: []
+    agent: "claude-3-5-sonnet-20241022"
+    api: []
+
+  src:
+    mastra:
+      index.ts:
+        content: |-
+          Mastra.aiの主要設定とエントリーポイント
+          - 設定のエクスポート
+          - 共通インターフェース定義
+        dependency:
+          - "@mastra/core"
+          - "@mastra/memory"
+          - "@mastra/tools"
+        agent: "claude-3-5-sonnet-20241022"
+        api: []
+
+      agents:
+        index.ts:
+          content: |-
+            エージェント設定のメインファイル
+            - エージェントインスタンスの作成
+            - エージェント設定の定義
+          dependency:
+            - "@mastra/core"
+            - "src/mastra/index.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+      tools:
+        index.ts:
+          content: |-
+            ツール定義のメインファイル
+            - カスタムツールの実装
+            - ツールインターフェースの定義
+          dependency:
+            - "@mastra/tools"
+            - "src/mastra/index.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+      memory:
+        index.ts:
+          content: |-
+            メモリ管理の実装
+            - 会話履歴の永続化
+            - コンテキストの管理
+            - メモリストアの設定
+          dependency:
+            - "@mastra/memory"
+            - "src/mastra/index.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+      middleware:
+        index.ts:
+          content: |-
+            ミドルウェアのエントリーポイント
+            - ミドルウェアの集約
+            - エクスポート定義
+          dependency: []
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+        auth.ts:
+          content: |-
+            認証ミドルウェア
+            - トークン検証
+            - 権限チェック
+            - セッション管理
+          dependency:
+            - "src/mastra/middleware/type.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+        cors.ts:
+          content: |-
+            CORS設定ミドルウェア
+            - オリジン制御
+            - ヘッダー設定
+          dependency:
+            - "src/mastra/middleware/type.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+        logging.ts:
+          content: |-
+            ログ記録ミドルウェア
+            - リクエスト/レスポンスのログ
+            - エラーログ
+          dependency:
+            - "src/mastra/middleware/type.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+        special.ts:
+          content: |-
+            特殊処理ミドルウェア
+            - カスタムヘッダー処理
+            - 特殊なリクエスト加工
+          dependency:
+            - "src/mastra/middleware/type.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+        type.ts:
+          content: |-
+            ミドルウェアの型定義
+            - インターフェース
+            - 共通型
+          dependency: []
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+      workflows:
+        index.ts:
+          content: |-
+            ワークフロー定義
+            - タスクフローの設定
+            - エージェント連携ロジック
+            - エラーハンドリング
+          dependency:
+            - "@mastra/core"
+            - "src/mastra/agents/index.ts"
+            - "src/mastra/tools/index.ts"
+          agent: "claude-3-5-sonnet-20241022"
+          api: []
+
+    package.json:
+      content: |-
+        プロジェクト設定ファイル
+        - 依存パッケージ管理
+        - スクリプト定義
+        - プロジェクトメタデータ
+      dependency: []
+      agent: "claude-3-5-sonnet-20241022"
+      api: []
+
+    tsconfig.json:
+      content: |-
+        TypeScript設定
+        - コンパイラオプション
+        - パス設定
+        - ビルド設定
+      dependency: []
+      agent: "claude-3-5-sonnet-20241022"
+      api: []
+
+  config:
+    drizzle.config.ts:
+      content: |-
+        Drizzle ORM設定
+        - データベース接続設定（Turso）
+        - マイグレーション出力先設定
+        - スキーマファイルの場所指定
+      dependency:
+        - "drizzle-kit"
+        - "dotenv"
+        - "src/db/schema.ts"
+      agent: "claude-3-5-sonnet-20241022"
+      api:
+        - name: "Turso"
+          type: "database"
+          config:
+            - "DATABASE_URL"
+            - "DATABASE_AUTH_TOKEN"
+
+    .env:
+      content: |-
+        環境変数設定
+        - API キー
+        - データベース接続情報
+        - その他設定値
+      dependency: []
+      agent: "claude-3-5-sonnet-20241022"
+      api: []
+
+  docs:
+    content: |-
+      プロジェクトドキュメント
+      - セットアップガイド
+      - API仕様
+      - 開発ガイドライン
+    dependency: []
+    agent: "claude-3-5-sonnet-20241022"
+    api: []
+
+  tests:
+    content: |-
+      テストファイル
+      - ユニットテスト
+      - 統合テスト
+      - E2Eテスト
+    dependency: []
+    agent: "claude-3-5-sonnet-20241022"
+    api: []
+
+  db:
+    index.ts:
+      content: |-
+        データベース設定のエントリーポイント
+        - DB接続設定
+        - クライアントのエクスポート
+      dependency:
+        - "drizzle-orm"
+        - "src/db/schema.ts"
+      agent: "claude-3-5-sonnet-20241022"
+      api: []
+
+    schema.ts:
+      content: |-
+        データベーススキーマ定義
+        - テーブル定義
+        - リレーション設定
+        - 型定義
+      dependency:
+        - "drizzle-orm"
+      agent: "claude-3-5-sonnet-20241022"
+      api: []
+
+    migrations:
+      0000_goofy_logan.sql:
+        content: |-
+          初期マイグレーション
+          - テーブル作成
+          - 初期データ設定
+          - インデックス設定
+        dependency: []
+        agent: "claude-3-5-sonnet-20241022"
+        api: []
