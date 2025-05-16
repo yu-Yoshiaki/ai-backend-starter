@@ -9,6 +9,7 @@ import {
   // specialMiddleware,
 } from "./middleware";
 import { CloudflareDeployer } from "@mastra/deployer-cloudflare";
+import { customRoute } from "./route";
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
@@ -35,6 +36,9 @@ export const mastra = new Mastra({
     //   handler: specialMiddleware,
     // },
   ],
+  server: {
+    apiRoutes: [customRoute],
+  },
   deployer: new CloudflareDeployer({
     scope: process.env.CLOUDFLARE_ACCOUNT_ID ?? "",
     projectName: "ai-backend-starter",
