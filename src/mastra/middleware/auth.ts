@@ -1,6 +1,6 @@
 import { MastraMiddleware } from "./type";
 
-const isDevelopment = () => {
+export const isDevelopment = () => {
   // 環境変数による判定
   if (process.env.NODE_ENV === "development") return true;
 
