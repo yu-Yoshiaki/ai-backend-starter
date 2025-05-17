@@ -5,8 +5,14 @@ const isDevelopment = () => {
   if (process.env.NODE_ENV === "development") return true;
 
   // mastra dev のデフォルトポート(4111)での実行判定
-  const url = new URL(process.env.APP_URL || "");
-  if (url.port === "4111") return true;
+  const appUrl = process.env.APP_URL;
+  if (!appUrl) return false;
+  try {
+    const url = new URL(appUrl);
+    if (url.port === "4111") return true;
+  } catch {
+    return false;
+  }
 
   return false;
 };
