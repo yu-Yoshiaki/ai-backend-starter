@@ -7,7 +7,6 @@ const isDevelopment = () => {
   // mastra dev のデフォルトポート(4111)での実行判定
   const appUrl = process.env.APP_URL;
   if (!appUrl) return false;
-
   try {
     const url = new URL(appUrl);
     return url.port === "4111";
