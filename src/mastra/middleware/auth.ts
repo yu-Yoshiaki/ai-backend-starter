@@ -9,12 +9,10 @@ const isDevelopment = () => {
   if (!appUrl) return false;
   try {
     const url = new URL(appUrl);
-    if (url.port === "4111") return true;
+    return url.port === "4111";
   } catch {
     return false;
   }
-
-  return false;
 };
 
 export const authMiddleware: MastraMiddleware = async (c, next) => {
